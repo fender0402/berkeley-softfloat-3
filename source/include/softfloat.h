@@ -100,7 +100,8 @@ typedef enum {
     softfloat_flag_underflow =  2,
     softfloat_flag_overflow  =  4,
     softfloat_flag_infinite  =  8,
-    softfloat_flag_invalid   = 16
+    softfloat_flag_invalid   = 16,
+    softfloat_flag_idenormal   = 32
 } exceptionFlag_t;
 
 /*----------------------------------------------------------------------------

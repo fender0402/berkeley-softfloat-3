@@ -40,6 +40,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdbool.h>
 #include <stdint.h>
 #include "primitives.h"
+#include "softfloat.h"
 #include "softfloat_types.h"
 
 union ui16_f16 { uint16_t ui; float16_t f; };
@@ -83,7 +84,16 @@ int_fast64_t softfloat_roundMToI64( bool, uint32_t *, uint_fast8_t, bool );
 *----------------------------------------------------------------------------*/
 #define signF16UI( a ) ((bool) ((uint16_t) (a)>>15))
 #define expF16UI( a ) ((int_fast8_t) ((a)>>10) & 0x1F)
-#define fracF16UI( a ) ((a) & 0x03FF)
+//#define fracF16UI( a ) ((a) & 0x03FF)
+static inline unsigned short fracF16UI(unsigned short a) {
+    bool a_exp_zero = ((a & 0x7C00) == 0);
+    bool a_mnt_nzero = ((a & 0x03FF) != 0);
+    if ((softfloat_fz16 == softfloat_fz16_enable) && a_exp_zero && a_mnt_nzero){
+        return a & 0x0;
+    } else {
+        return a & 0x03FF;
+    }
+}
 #define packToF16UI( sign, exp, sig ) (((uint16_t) (sign)<<15) + ((uint16_t) (exp)<<10) + (sig))
 
 #define isNaNF16UI( a ) (((~(a) & 0x7C00) == 0) && ((a) & 0x03FF))
@@ -116,7 +126,17 @@ struct exp8_sig16 softfloat_normSubnormalBF16Sig( uint_fast16_t );
 *----------------------------------------------------------------------------*/
 #define signF32UI( a ) ((bool) ((uint32_t) (a)>>31))
 #define expF32UI( a ) ((int_fast16_t) ((a)>>23) & 0xFF)
-#define fracF32UI( a ) ((a) & 0x007FFFFF)
+//#define fracF32UI( a ) ((a) & 0x007FFFFF)
+static inline unsigned int fracF32UI(unsigned int a) {
+    bool a_exp_zero = ((a & 0x7F800000) == 0);
+    bool a_mnt_nzero = ((a & 0x007FFFFF) != 0);
+    if ((softfloat_fz == softfloat_fz_enable) && a_exp_zero && a_mnt_nzero){
+        softfloat_exceptionFlags |= softfloat_flag_idenormal;
+        return a & 0x0;
+    } else {
+        return a & 0x007FFFFF;
+    }
+}
 #define packToF32UI( sign, exp, sig ) (((uint32_t) (sign)<<31) + ((uint32_t) (exp)<<23) + (sig))
 
 #define isNaNF32UI( a ) (((~(a) & 0x7F800000) == 0) && ((a) & 0x007FFFFF))
@@ -137,7 +157,17 @@ float32_t
 *----------------------------------------------------------------------------*/
 #define signF64UI( a ) ((bool) ((uint64_t) (a)>>63))
 #define expF64UI( a ) ((int_fast16_t) ((a)>>52) & 0x7FF)
-#define fracF64UI( a ) ((a) & UINT64_C( 0x000FFFFFFFFFFFFF ))
+//#define fracF64UI( a ) ((a) & UINT64_C( 0x000FFFFFFFFFFFFF ))
+static inline unsigned long long int fracF64UI(unsigned long long int a) {
+    bool a_exp_zero = ((a & UINT64_C(0x7FF0000000000000)) == 0);
+    bool a_mnt_nzero = ((a & UINT64_C(0x000FFFFFFFFFFFFF)) != 0);
+    if ((softfloat_fz == softfloat_fz_enable) && a_exp_zero && a_mnt_nzero){
+        softfloat_exceptionFlags |= softfloat_flag_idenormal;
+        return a & UINT64_C(0x0);
+    } else {
+        return a & UINT64_C(0x000FFFFFFFFFFFFF);
+    }
+}
 #define packToF64UI( sign, exp, sig ) ((uint64_t) (((uint_fast64_t) (sign)<<63) + ((uint_fast64_t) (exp)<<52) + (sig)))
 
 #define isNaNF64UI( a ) (((~(a) & UINT64_C( 0x7FF0000000000000 )) == 0) && ((a) & UINT64_C( 0x000FFFFFFFFFFFFF )))
