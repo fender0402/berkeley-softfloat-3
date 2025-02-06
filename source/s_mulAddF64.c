@@ -223,11 +223,17 @@ float64_t
     softfloat_raiseFlags( softfloat_flag_invalid );
     uiZ = defaultNaNF64UI;
  propagateNaN_ZC:
+    if(softfloat_fz == softfloat_fz_enable){
+        uiC = (((uiC & UINT64_C(0x7FF0000000000000)) == 0) ? (uiC & (UINT64_C)0x8000000000000000) : uiC);
+    }
     uiZ = softfloat_propagateNaNF64UI( uiZ, uiC );
     goto uiZ;
     /*------------------------------------------------------------------------
     *------------------------------------------------------------------------*/
  zeroProd:
+    if(softfloat_fz == softfloat_fz_enable){
+        uiC = (((uiC & UINT64_C(0x7FF0000000000000)) == 0) ? (uiC & (UINT64_C)0x8000000000000000) : uiC);
+    }
     uiZ = uiC;
     if ( ! (expC | sigC) && (signZ != signC) ) {
  completeCancellation:
@@ -474,11 +480,17 @@ float64_t
     softfloat_raiseFlags( softfloat_flag_invalid );
     uiZ = defaultNaNF64UI;
  propagateNaN_ZC:
+    if(softfloat_fz == softfloat_fz_enable){
+        uiC = (((uiC & UINT64_C(0x7FF0000000000000)) == 0) ? (uiC & UINT64_C(0x8000000000000000)) : uiC);
+    }
     uiZ = softfloat_propagateNaNF64UI( uiZ, uiC );
     goto uiZ;
     /*------------------------------------------------------------------------
     *------------------------------------------------------------------------*/
  zeroProd:
+    if(softfloat_fz == softfloat_fz_enable){
+        uiC = (((uiC & UINT64_C(0x7FF0000000000000)) == 0) ? (uiC & UINT64_C(0x8000000000000000)) : uiC);
+    }
     uiZ = uiC;
     if ( ! (expC | sigC) && (signZ != signC) ) {
  completeCancellation:

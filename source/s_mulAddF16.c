@@ -206,11 +206,17 @@ float16_t
     softfloat_raiseFlags( softfloat_flag_invalid );
     uiZ = defaultNaNF16UI;
  propagateNaN_ZC:
+    if(softfloat_fz16 == softfloat_fz16_enable){
+        uiC = (((uiC & 0x7C00) == 0) ? (uiC & 0x8000) : uiC);
+    }
     uiZ = softfloat_propagateNaNF16UI( uiZ, uiC );
     goto uiZ;
     /*------------------------------------------------------------------------
     *------------------------------------------------------------------------*/
  zeroProd:
+    if(softfloat_fz16 == softfloat_fz16_enable){
+        uiC = (((uiC & 0x7C00) == 0) ? (uiC & 0x8000) : uiC);
+    }
     uiZ = uiC;
     if ( ! (expC | sigC) && (signProd != signC) ) {
  completeCancellation:

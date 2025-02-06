@@ -89,7 +89,7 @@ static inline unsigned short fracF16UI(unsigned short a) {
     bool a_exp_zero = ((a & 0x7C00) == 0);
     bool a_mnt_nzero = ((a & 0x03FF) != 0);
     if ((softfloat_fz16 == softfloat_fz16_enable) && a_exp_zero && a_mnt_nzero){
-        return a & 0x0;
+        return a & 0x0000;
     } else {
         return a & 0x03FF;
     }

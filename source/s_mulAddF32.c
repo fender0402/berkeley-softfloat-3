@@ -204,11 +204,17 @@ float32_t
     softfloat_raiseFlags( softfloat_flag_invalid );
     uiZ = defaultNaNF32UI;
  propagateNaN_ZC:
+    if(softfloat_fz == softfloat_fz_enable){
+        uiC = (((uiC & 0x7F800000) == 0) ? (uiC & 0x80000000) : uiC);
+    }
     uiZ = softfloat_propagateNaNF32UI( uiZ, uiC );
     goto uiZ;
     /*------------------------------------------------------------------------
     *------------------------------------------------------------------------*/
  zeroProd:
+    if(softfloat_fz == softfloat_fz_enable){
+        uiC = (((uiC & 0x7F800000) == 0) ? (uiC & 0x80000000) : uiC);
+    }
     uiZ = uiC;
     if ( ! (expC | sigC) && (signProd != signC) ) {
  completeCancellation:
