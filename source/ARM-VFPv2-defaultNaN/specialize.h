@@ -43,6 +43,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "softfloat.h"
 
 /*----------------------------------------------------------------------------
+| Default value for 'softfloat_fz/fz16'.
+*----------------------------------------------------------------------------*/
+#define init_fz softfloat_fz_disable
+#define init_fz16 softfloat_fz16_disable
+
+/*----------------------------------------------------------------------------
 | Default value for 'softfloat_detectTininess'.
 *----------------------------------------------------------------------------*/
 #define init_detectTininess softfloat_tininess_beforeRounding

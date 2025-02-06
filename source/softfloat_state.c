@@ -47,6 +47,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 THREAD_LOCAL uint_fast8_t softfloat_roundingMode = softfloat_round_near_even;
 THREAD_LOCAL uint_fast8_t softfloat_detectTininess = init_detectTininess;
 THREAD_LOCAL uint_fast8_t softfloat_exceptionFlags = 0;
+THREAD_LOCAL uint_fast8_t softfloat_fz = init_fz;
+THREAD_LOCAL uint_fast8_t softfloat_fz16 = init_fz16;
 
 THREAD_LOCAL uint_fast8_t extF80_roundingPrecision = 80;
 

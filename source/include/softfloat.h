@@ -53,6 +53,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef THREAD_LOCAL
 #define THREAD_LOCAL
 #endif
+/*----------------------------------------------------------------------------
+| Software floating-point flush to zero mode.
+*----------------------------------------------------------------------------*/
+extern THREAD_LOCAL uint_fast8_t softfloat_fz;
+enum {
+    softfloat_fz_disable  = 0,
+    softfloat_fz_enable = 1
+};
+
+extern THREAD_LOCAL uint_fast8_t softfloat_fz16;
+enum {
+    softfloat_fz16_disable  = 0,
+    softfloat_fz16_enable = 1
+};
 
 /*----------------------------------------------------------------------------
 | Software floating-point underflow tininess-detection mode.

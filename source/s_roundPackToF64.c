@@ -49,6 +49,7 @@ float64_t
     bool isTiny;
     uint_fast64_t uiZ;
     union ui64_f64 uZ;
+    float64_t flush_zero_result;
 
     /*------------------------------------------------------------------------
     *------------------------------------------------------------------------*/
@@ -76,6 +77,13 @@ float64_t
             sig = softfloat_shiftRightJam64( sig, -exp );
             exp = 0;
             roundBits = sig & 0x3FF;
+            if(softfloat_fz == softfloat_fz_enable){
+                if(isTiny) {
+                    softfloat_raiseFlags( softfloat_flag_underflow );
+                    flush_zero_result.v = (uint64_t)sign << 63; 
+                    return flush_zero_result;    
+                }
+            }
             if ( isTiny && roundBits ) {
                 softfloat_raiseFlags( softfloat_flag_underflow );
             }

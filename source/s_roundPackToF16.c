@@ -49,7 +49,8 @@ float16_t
     bool isTiny;
     uint_fast16_t uiZ;
     union ui16_f16 uZ;
-
+    float16_t flush_zero_result;
+    
     /*------------------------------------------------------------------------
     *------------------------------------------------------------------------*/
     roundingMode = softfloat_roundingMode;
@@ -75,6 +76,13 @@ float16_t
             sig = softfloat_shiftRightJam32( sig, -exp );
             exp = 0;
             roundBits = sig & 0xF;
+            if(softfloat_fz16 == softfloat_fz16_enable){
+                if(isTiny) {
+                    softfloat_raiseFlags( softfloat_flag_underflow );
+                    flush_zero_result.v = (uint16_t)sign << 15; 
+                    return flush_zero_result;    
+                }
+            }
             if ( isTiny && roundBits ) {
                 softfloat_raiseFlags( softfloat_flag_underflow );
             }

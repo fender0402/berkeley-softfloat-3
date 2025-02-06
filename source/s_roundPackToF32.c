@@ -49,6 +49,7 @@ float32_t
     bool isTiny;
     uint_fast32_t uiZ;
     union ui32_f32 uZ;
+    float32_t flush_zero_result;
 
     /*------------------------------------------------------------------------
     *------------------------------------------------------------------------*/
@@ -75,6 +76,13 @@ float32_t
             sig = softfloat_shiftRightJam32( sig, -exp );
             exp = 0;
             roundBits = sig & 0x7F;
+            if(softfloat_fz == softfloat_fz_enable){
+                if (isTiny) {
+                    softfloat_raiseFlags( softfloat_flag_underflow );
+                    flush_zero_result.v = (uint32_t)sign << 31; 
+                    return flush_zero_result;
+                }
+            }
             if ( isTiny && roundBits ) {
                 softfloat_raiseFlags( softfloat_flag_underflow );
             }
